@@ -1,0 +1,74 @@
+Create IAM Role with below IAM Policy and Trust Relationship:
+
+IAM Policy:
+{
+"Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::s3-bucket-name/path/of/the/key",
+                "arn:aws:s3:::s3-bucket-name/path/of/the/key/*"
+            ]
+        }
+    ]
+}
+
+Trust relationships (IAM User which can assume the role from AWS CLI):
+
+{
+"Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<aws_account_id>:user/<iam_username>"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+Assume Role steps:
+
+aws sts assume-role --role-arn arn:aws:iam::aws_account_id:role/lotame_hosted_bucket_access --role-session-name s3bucketaccess
+output
+{
+    "Credentials": {
+        "AccessKeyId": "SOMETEXT",
+        "SecretAccessKey": "MORETEXT",
+        "SessionToken": "LONGTEXT",
+        "Expiration": "2024-10-30T18:46:24+00:00"
+    },
+    "AssumedRoleUser": {
+        "AssumedRoleId": "SOMETEXT:s3bucketaccess",
+        "Arn": "arn:aws:sts::aws_account_id:assumed-role/external_hosted_bucket_access/s3bucketaccess"
+    }
+}
+
+Export environment variables:
+
+export AWS_ACCESS_KEY_ID=SOMETEXT
+export AWS_SECRET_ACCESS_KEY=MORETEXT
+export AWS_SESSION_TOKEN=LONGTEXT
+
+Access/Upload files in shared S3 bucket:
+
+aws s3 ls s3://s3-bucket-name/path/of/the/key/
