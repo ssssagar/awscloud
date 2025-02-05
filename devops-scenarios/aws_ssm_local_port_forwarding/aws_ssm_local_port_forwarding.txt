@@ -1,0 +1,56 @@
+To forward traffic from an EC2 instance to your local machine using AWS SSM (Session Manager), you can use Session Manager Port Forwarding without needing SSH access. This setup allows you to securely connect to services on the EC2 instance (e.g., a web server) and access them from your local machine.
+
+Steps to Forward Traffic
+
+Step 1: Install AWS CLI v2 on your local machine
+aws --version
+
+Step 2. Install Session Manager Plugin
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac_arm64/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
+
+unzip sessionmanager-bundle.zip
+
+sudo ./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b /usr/local/bin/session-manager-plugin
+
+type session-manager-plugin
+
+Step 3. IAM Role Permissions for EC2 Instance
+Attach AWS managed policy: AmazonSSMManagedInstanceCore
+
+{
+    "Effect": "Allow",
+    "Action": [
+        "ssm:StartSession",
+        "ssm:DescribeInstanceInformation",
+        "ec2:DescribeInstances",
+        "ssm:DescribeSessions",
+        "ssm:SendCommand"
+    ],
+    "Resource": "*"
+}
+
+Step 4. IAM Permissions for Your Local User
+Ensure your AWS IAM User or role has access to SSM:
+
+{
+    "Effect": "Allow",
+    "Action": [
+        "ssm:StartSession",
+        "ssm:DescribeSessions"
+    ],
+    "Resource": "*"
+}
+
+Step 5. Start Port Forwarding Using SSM
+Run the following AWS CLI command to forward traffic (Change port number as per requirement):
+
+aws ssm start-session \
+  --target i-0bae722d82740f1e8 \
+  --document-name AWS-StartPortForwardingSession \
+  --parameters '{"portNumber":["8080"],"localPortNumber":["8080"]}'
+
+Step 6. Access the Forwarded Traffic
+After running the above command, you can access the service from your local machine:
+http://localhost:8080
+
+Traffic will be securely forwarded from your local machine to the target EC2 instance.
