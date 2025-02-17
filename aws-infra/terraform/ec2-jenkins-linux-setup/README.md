@@ -10,6 +10,7 @@ AWS_SECRET_ACCESS_KEY=$(aws -profile <profile_name> configure get aws_secret_acc
 AWS_SESSION_TOKEN=$(aws -profile <profile_name> configure get aws_session_token);
 ```
 
+
 Please use https://github.com/SMG-Digital/Ops-Scripts/blob/master/python/sts.py to switch Another AWS Account <AWS Account Number>.
 
 2. Initialize Terraform

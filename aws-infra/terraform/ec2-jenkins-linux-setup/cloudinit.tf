@@ -17,7 +17,7 @@ data "cloudinit_config" "cloudinit-ebs-mount" {
 	part {
 			content_type = "text/x-shellscript"
 		# Use a template file to generate content, passing the instance device name as a vartable 
-		content = templatefile("scripts/ubuntu_configuration.sh", { 
+		content = templatefile("scripts/${var.os_type}_configuration.sh", {
 			DEVICE = var.server_ebs_instance_device_name 
 			JENKINS_VERSION = var.jenkins_version
 			TERRAFORM_BIN_VERSION = var.terraform_version 

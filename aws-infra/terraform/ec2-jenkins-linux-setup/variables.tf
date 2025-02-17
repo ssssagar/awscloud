@@ -10,7 +10,7 @@ variable "server_name" {
 variable "os_type" {
   description = "Operating system to use for the EC2 instance"
   type        = string
-  default     = "ubuntu"  # Default OS is Ubuntu
+  default     = "amazon-linux"  # Default OS to select: amazon-linux or ubuntu
 }
 
 variable "server_ami_map" {
